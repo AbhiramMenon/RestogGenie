@@ -2,9 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="RestoGenie - Revolutionizing food ordering in food courts with QR code technology, real-time tracking, and seamless multi-restaurant ordering.">
+    <meta name="keywords" content="food ordering, QR code, food court, restaurant, mobile app, online ordering">
+    <meta name="author" content="RestoGenie Team">
+    
+    <!-- Mobile Optimization Meta Tags -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="RestoGenie">
+    <meta name="theme-color" content="#FF6B35">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RestoGenie - Revolutionizing Food Ordering">
+    <meta property="og:description" content="Order food seamlessly from multiple restaurants with QR code technology">
+    <meta property="og:url" content="https://restogenie.com">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍽️%3C/text%3E%3C/svg%3E">
+    
     <title>RestoGenie - Revolutionizing Food Ordering in Food Courts</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <style>
         /* Design System Variables */
         :root {
@@ -98,9 +123,15 @@
             --duration-fast: 150ms;
             --duration-normal: 300ms;
             --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Mobile-specific variables */
+            --mobile-touch-target: 44px;
+            --mobile-padding: 1rem;
+            --mobile-margin: 0.75rem;
+            --mobile-border-radius: 8px;
         }
 
-        /* Base Styles */
+        /* Base Styles - Mobile First */
         * {
             margin: 0;
             padding: 0;
@@ -109,6 +140,19 @@
 
         html {
             scroll-behavior: smooth;
+            font-size: 16px; /* Base mobile font size */
+        }
+
+        @media (min-width: 768px) {
+            html {
+                font-size: 17px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            html {
+                font-size: 18px;
+            }
         }
 
         body {
@@ -117,6 +161,8 @@
             color: var(--color-text);
             background-color: var(--color-background);
             overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Typography */
@@ -138,7 +184,7 @@
             color: var(--color-text-secondary);
         }
 
-        /* Header */
+        /* Header - Mobile First */
         .header {
             position: fixed;
             top: 0;
@@ -155,53 +201,136 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: var(--space-4) var(--space-6);
+            padding: var(--space-3) var(--space-4);
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .nav {
+                padding: var(--space-4) var(--space-6);
+            }
         }
 
         .logo {
-            font-size: var(--font-size-2xl);
+            font-size: var(--font-size-lg);
             font-weight: var(--font-weight-bold);
             color: var(--color-primary);
             text-decoration: none;
+            z-index: 1001;
         }
 
+        @media (min-width: 768px) {
+            .logo {
+                font-size: var(--font-size-2xl);
+            }
+        }
+
+        /* Mobile Navigation */
         .nav-links {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
             display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             list-style: none;
             gap: var(--space-8);
-            align-items: center;
+            transform: translateX(-100%);
+            transition: transform var(--duration-normal) var(--ease-out);
+            z-index: 1000;
+        }
+
+        .nav-links.active {
+            transform: translateX(0);
         }
 
         .nav-links a {
             text-decoration: none;
             color: var(--color-text);
             font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-xl);
             transition: color var(--duration-fast) var(--ease-out);
+            padding: var(--space-4) var(--space-6);
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            border-radius: var(--radius-base);
         }
 
-        .nav-links a:hover {
+        .nav-links a:hover,
+        .nav-links a:active {
             color: var(--color-primary);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        /* Desktop Navigation */
+        @media (min-width: 768px) {
+            .nav-links {
+                position: static;
+                background: none;
+                backdrop-filter: none;
+                flex-direction: row;
+                transform: translateX(0);
+                gap: var(--space-8);
+            }
+
+            .nav-links a {
+                font-size: var(--font-size-base);
+                padding: var(--space-2) var(--space-3);
+            }
         }
 
         .mobile-menu-toggle {
-            display: none;
             background: none;
             border: none;
             font-size: var(--font-size-xl);
             color: var(--color-text);
             cursor: pointer;
+            padding: var(--space-3);
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-base);
+            z-index: 1001;
+            transition: all var(--duration-fast) var(--ease-out);
         }
 
-        /* Hero Section */
+        .mobile-menu-toggle:hover {
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        @media (min-width: 768px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+
+        /* Hero Section - Mobile First */
         .hero {
-            padding: var(--space-24) var(--space-6) var(--space-20);
+            padding: calc(60px + var(--space-16)) var(--space-4) var(--space-16);
             background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
             color: white;
             text-align: center;
             position: relative;
             overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .hero {
+                padding: calc(80px + var(--space-20)) var(--space-6) var(--space-20);
+            }
         }
 
         .hero::before {
@@ -221,48 +350,101 @@
             z-index: 2;
             max-width: 800px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .hero h1 {
-            font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-5xl));
+            font-size: clamp(1.75rem, 8vw, 3rem);
             margin-bottom: var(--space-6);
             color: white;
+            line-height: 1.1;
+        }
+
+        @media (min-width: 768px) {
+            .hero h1 {
+                font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-5xl));
+            }
         }
 
         .hero-subtitle {
-            font-size: var(--font-size-xl);
+            font-size: var(--font-size-lg);
             margin-bottom: var(--space-8);
             opacity: 0.9;
+            line-height: 1.4;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (min-width: 768px) {
+            .hero-subtitle {
+                font-size: var(--font-size-xl);
+                max-width: 600px;
+            }
         }
 
         .cta-button {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
             background: white;
             color: var(--color-primary);
-            padding: var(--space-4) var(--space-8);
+            padding: var(--space-4) var(--space-6);
             border-radius: var(--radius-full);
             text-decoration: none;
             font-weight: var(--font-weight-semibold);
-            font-size: var(--font-size-lg);
+            font-size: var(--font-size-base);
             transition: all var(--duration-normal) var(--ease-out);
             box-shadow: var(--shadow-lg);
+            min-height: 50px;
+            min-width: 200px;
         }
 
-        .cta-button:hover {
+        @media (min-width: 768px) {
+            .cta-button {
+                padding: var(--space-4) var(--space-8);
+                font-size: var(--font-size-lg);
+            }
+        }
+
+        .cta-button:hover,
+        .cta-button:active {
             transform: translateY(-2px);
             box-shadow: var(--shadow-xl);
         }
 
-        /* Container */
+        /* Container - Mobile First */
         .container {
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 var(--space-6);
+            padding: 0 var(--space-4);
+            overflow: visible;
         }
 
-        /* Section Styles */
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 var(--space-6);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding: 0 var(--space-8);
+            }
+        }
+
+        /* Section Styles - Mobile First */
         .section {
-            padding: var(--space-20) 0;
+            padding: var(--space-16) 0;
+            overflow: visible;
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                padding: var(--space-20) 0;
+            }
         }
 
         .section-title {
@@ -317,24 +499,49 @@
             color: #388e3c;
         }
 
-        /* Features Grid */
+        /* Features Grid - Mobile First */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--space-8);
+            grid-template-columns: 1fr;
+            gap: var(--space-6);
+        }
+
+        @media (min-width: 640px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-8);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         .feature-card {
             background: white;
-            padding: var(--space-8);
-            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
             text-align: center;
             transition: all var(--duration-normal) var(--ease-out);
             border: 1px solid var(--color-border);
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .feature-card:hover {
+        @media (min-width: 768px) {
+            .feature-card {
+                padding: var(--space-8);
+                border-radius: var(--radius-xl);
+            }
+        }
+
+        .feature-card:hover,
+        .feature-card:active {
             transform: translateY(-4px);
             box-shadow: var(--shadow-xl);
         }
@@ -351,26 +558,52 @@
             margin-bottom: var(--space-3);
         }
 
-        /* How It Works */
+        /* How It Works - Mobile First */
         .how-it-works {
             background: var(--color-surface);
+            overflow: visible;
+            padding: 4rem 0;
         }
 
         .steps-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--space-8);
+            gap: 2rem;
             position: relative;
+        }
+
+        /* Mobile: Single column */
+        @media (max-width: 767px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tablet and up: 2x2 grid */
+        @media (min-width: 768px) {
+            .steps-container {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         .step-card {
             background: white;
             padding: var(--space-8);
-            border-radius: var(--radius-xl);
+            border-radius: var(--radius-lg);
             text-align: center;
-            position: relative;
             box-shadow: var(--shadow-sm);
             transition: all var(--duration-normal) var(--ease-out);
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: var(--space-8);
+        }
+
+        @media (min-width: 768px) {
+            .step-card {
+                padding: var(--space-8);
+                border-radius: var(--radius-xl);
+            }
         }
 
         .step-card:hover {
@@ -379,34 +612,44 @@
         }
 
         .step-number {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--color-primary);
-            color: white;
-            width: 40px;
-            height: 40px;
+            display: inline-flex;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #FF6B35, #F7931E);
             border-radius: 50%;
-            display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: var(--font-weight-bold);
-            font-size: var(--font-size-lg);
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: var(--space-4);
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
         }
 
         .step-title {
-            margin-top: var(--space-6);
             font-size: var(--font-size-xl);
             font-weight: var(--font-weight-semibold);
             margin-bottom: var(--space-3);
         }
 
-        /* Unique Features */
+        /* Unique Features - Mobile First */
         .unique-features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: var(--space-8);
+            grid-template-columns: 1fr;
+            gap: var(--space-6);
+        }
+
+        @media (min-width: 768px) {
+            .unique-features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-8);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .unique-features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         .unique-feature-card {
@@ -433,15 +676,22 @@
             opacity: 0.9;
         }
 
-        /* Benefits Section */
+        /* Benefits Section - Mobile First */
         .benefits {
             background: var(--color-surface);
         }
 
         .benefits-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: var(--space-12);
+            grid-template-columns: 1fr;
+            gap: var(--space-8);
+        }
+
+        @media (min-width: 768px) {
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-12);
+            }
         }
 
         .benefits-column {
@@ -462,9 +712,11 @@
             display: flex;
             align-items: center;
             margin-bottom: var(--space-4);
-            padding: var(--space-3);
+            padding: var(--space-4);
             border-radius: var(--radius-base);
             transition: background-color var(--duration-fast) var(--ease-out);
+            min-height: 50px;
+            cursor: pointer;
         }
 
         .benefit-item:hover {
@@ -477,12 +729,26 @@
             font-size: var(--font-size-lg);
         }
 
-        /* App Screenshots */
+        /* App Screenshots - Mobile First */
         .app-showcase {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--space-8);
-            margin-top: var(--space-12);
+            grid-template-columns: 1fr;
+            gap: var(--space-6);
+            margin-top: var(--space-8);
+        }
+
+        @media (min-width: 640px) {
+            .app-showcase {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-8);
+                margin-top: var(--space-12);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .app-showcase {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         .app-screenshot {
@@ -503,18 +769,38 @@
             display: block;
         }
 
-        /* Footer */
+        /* Footer - Mobile First */
         .footer {
             background: var(--color-dark-blue);
             color: white;
-            padding: var(--space-20) 0 var(--space-8);
+            padding: var(--space-16) 0 var(--space-8);
+        }
+
+        @media (min-width: 768px) {
+            .footer {
+                padding: var(--space-20) 0 var(--space-8);
+            }
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--space-12);
-            margin-bottom: var(--space-12);
+            grid-template-columns: 1fr;
+            gap: var(--space-8);
+            margin-bottom: var(--space-8);
+        }
+
+        @media (min-width: 640px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-12);
+                margin-bottom: var(--space-12);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .footer-content {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
 
         .footer-section h4 {
@@ -565,44 +851,215 @@
             color: rgba(255, 255, 255, 0.6);
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-links {
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: var(--space-6);
+            right: var(--space-4);
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all var(--duration-normal) var(--ease-out);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover,
+        .back-to-top:active {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        @media (min-width: 768px) {
+            .back-to-top {
+                right: var(--space-6);
+                width: 56px;
+                height: 56px;
+            }
+        }
+
+        /* Touch Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .feature-card:hover,
+            .step-card:hover,
+            .unique-feature-card:hover {
+                transform: none;
+            }
+
+            .feature-card:active,
+            .step-card:active {
+                transform: scale(0.98);
+            }
+        }
+
+        /* Swipeable Feature Cards Container */
+        .swipeable-container {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .swipeable-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .swipeable-grid {
+            display: flex;
+            gap: var(--space-4);
+            padding: 0 var(--space-4);
+        }
+
+        .swipeable-grid .feature-card,
+        .swipeable-grid .step-card {
+            flex: 0 0 280px;
+            scroll-snap-align: start;
+        }
+
+        @media (min-width: 640px) {
+            .swipeable-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                padding: 0;
+            }
+            
+            .swipeable-grid .feature-card,
+            .swipeable-grid .step-card {
+                flex: none;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .swipeable-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Mobile-specific improvements */
+        .mobile-optimized {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+        
+        /* iOS Safari viewport fix */
+        .hero {
+            min-height: 100vh;
+            min-height: calc(var(--vh, 1vh) * 100);
+        }
+        
+        /* Enhanced header transitions for mobile */
+        @media (max-width: 767px) {
+            .header {
+                transition: transform var(--duration-normal) var(--ease-out),
+                           background var(--duration-normal) var(--ease-out);
+            }
+        }
+
+        /* Improved button states for mobile */
+        .btn, .cta-button, .mobile-menu-toggle, .back-to-top {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        /* Better text rendering on mobile */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* Swipe indicators */
+        .swipe-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-2);
+            margin-top: var(--space-4);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        @media (min-width: 640px) {
+            .swipe-indicator {
                 display: none;
             }
+        }
 
-            .mobile-menu-toggle {
-                display: block;
+        /* Loading states for better perceived performance */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid var(--color-primary);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
+        }
 
-            .hero {
-                padding: var(--space-20) var(--space-4) var(--space-16);
+        /* Improved focus styles for accessibility */
+        *:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Performance optimizations */
+        .will-change {
+            will-change: transform, opacity;
+        }
+
+        /* Reduced motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
             }
-
-            .section {
-                padding: var(--space-16) 0;
-            }
-
-            .container {
-                padding: 0 var(--space-4);
-            }
-
-            .features-grid,
-            .unique-features-grid,
-            .steps-container {
-                grid-template-columns: 1fr;
-            }
-
-            .benefits-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .app-showcase {
-                grid-template-columns: 1fr;
-            }
-
-            h1 { font-size: var(--font-size-3xl); }
-            h2 { font-size: var(--font-size-2xl); }
         }
 
         /* Animation Classes */
@@ -650,17 +1107,17 @@
     <!-- Header -->
     <header class="header">
         <nav class="nav">
-            <a href="#" class="logo">
+            <a href="#home" class="logo">
                 <i class="fas fa-utensils"></i> RestoGenie
             </a>
-            <ul class="nav-links">
+            <ul class="nav-links" id="navLinks">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#how-it-works">How It Works</a></li>
                 <li><a href="#benefits">Benefits</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <button class="mobile-menu-toggle">
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu">
                 <i class="fas fa-bars"></i>
             </button>
         </nav>
@@ -672,7 +1129,8 @@
             <h1>Revolutionizing Food Ordering in Food Courts</h1>
             <p class="hero-subtitle">Developed by 5 energetic youths to make ordering food seamless and efficient</p>
             <a href="#features" class="cta-button">
-                <i class="fas fa-rocket"></i> Discover RestoGenie
+                <i class="fas fa-rocket"></i>
+                <span>Discover RestoGenie</span>
             </a>
         </div>
     </section>
@@ -684,7 +1142,7 @@
             <div class="problem-solution-grid">
                 <div class="problem-card slide-in-left">
                     <div class="card-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
+                        <i class="fas fa-users-slash"></i>
                     </div>
                     <h3>The Problem</h3>
                     <p>Crowded food courts create chaos with long queues, confused orders, and frustrated customers. Restaurant staff struggle to manage orders while maintaining food quality.</p>
@@ -696,6 +1154,16 @@
                     <h3>Our Solution</h3>
                     <p>RestoGenie transforms food ordering with QR code technology, real-time updates, and seamless multi-restaurant ordering - all in one powerful platform.</p>
                 </div>
+                </div>
+                <div class="swipe-indicator">
+                    <i class="fas fa-hand-point-right"></i>
+                    <span>Swipe to explore more features</span>
+                </div>
+                </div>
+                <div class="swipe-indicator">
+                    <i class="fas fa-arrows-alt-h"></i>
+                    <span>Swipe to see all steps</span>
+                </div>
             </div>
         </div>
     </section>
@@ -705,7 +1173,8 @@
         <div class="container">
             <h2 class="section-title fade-in">Powerful Features for Everyone</h2>
             <p class="section-subtitle fade-in">Discover how RestoGenie makes food ordering effortless for customers and efficient for restaurant staff</p>
-            <div class="features-grid">
+            <div class="swipeable-container mobile-optimized">
+                <div class="features-grid swipeable-grid">
                 <div class="feature-card fade-in" style="animation-delay: 0.1s;">
                     <div class="feature-icon">
                         <i class="fas fa-shopping-cart"></i>
@@ -725,7 +1194,7 @@
                         <i class="fas fa-times-circle"></i>
                     </div>
                     <h3 class="feature-title">Order Cancellation</h3>
-                    <p>Cancel orders easily - staff have the flexibility to manage orders.</p>
+                    <p>Cancel orders easily - both customers and staff have the flexibility to manage orders.</p>
                 </div>
                 <div class="feature-card fade-in" style="animation-delay: 0.4s;">
                     <div class="feature-icon">
@@ -745,8 +1214,8 @@
                     <div class="feature-icon">
                         <i class="fas fa-credit-card"></i>
                     </div>
-                    <h3 class="feature-title">Seamless Payments</h3>
-                    <p>Multiple payment methods supported for a smooth checkout experience.</p>
+                    <h3 class="feature-title">Mobile Payments</h3>
+                    <p>Apple Pay, Google Pay, and more payment methods for a smooth mobile checkout experience.</p>
                 </div>
             </div>
         </div>
@@ -757,26 +1226,27 @@
         <div class="container">
             <h2 class="section-title fade-in">How RestoGenie Works</h2>
             <p class="section-subtitle fade-in">Four simple steps to revolutionize your food ordering experience</p>
-            <div class="steps-container">
+            <div class="swipeable-container mobile-optimized">
+                <div class="steps-container swipeable-grid">
                 <div class="step-card fade-in" style="animation-delay: 0.1s;">
                     <div class="step-number">1</div>
                     <h3 class="step-title">Scan QR Code</h3>
-                    <p>Select your preferred restaurant by scanning their QR code. Instant access to digital menus!</p>
+                    <p>Select your preferred restaurant by scanning their QR code</p>
                 </div>
                 <div class="step-card fade-in" style="animation-delay: 0.2s;">
                     <div class="step-number">2</div>
                     <h3 class="step-title">Browse &amp; Add</h3>
-                    <p>Add unlimited items to your cart from the digital menu. No restrictions, just delicious choices!</p>
+                    <p>Add unlimited items to your cart from the digital menu</p>
                 </div>
                 <div class="step-card fade-in" style="animation-delay: 0.3s;">
                     <div class="step-number">3</div>
                     <h3 class="step-title">Multi-Restaurant</h3>
-                    <p>Want more? Add items from other restaurants to the same cart. Mix and match your favorites!</p>
+                    <p>Want more? Add items from other restaurants to the same cart</p>
                 </div>
                 <div class="step-card fade-in" style="animation-delay: 0.4s;">
                     <div class="step-number">4</div>
                     <h3 class="step-title">Pay &amp; Enjoy</h3>
-                    <p>Choose your payment method and enjoy your delicious order. It's that simple!</p>
+                    <p>Choose your payment method and enjoy your delicious order</p>
                 </div>
             </div>
         </div>
@@ -844,24 +1314,40 @@
                         <i class="fas fa-check-circle benefit-icon"></i>
                         <span>Easy cart management</span>
                     </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-check-circle benefit-icon"></i>
+                        <span>Works on any smartphone</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-check-circle benefit-icon"></i>
+                        <span>Offline menu viewing</span>
+                    </div>
                 </div>
                 <div class="benefits-column slide-in-right">
                     <h3 class="benefits-title">For Restaurants</h3>
                     <div class="benefit-item">
                         <i class="fas fa-check-circle benefit-icon"></i>
-                        <span>Focus on food preparation and cleaning</span>
+                        <span>Reduced order errors</span>
                     </div>
                     <div class="benefit-item">
                         <i class="fas fa-check-circle benefit-icon"></i>
-                        <span>Reduced staff workload</span>
+                        <span>Faster table turnover</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-check-circle benefit-icon"></i>
+                        <span>Less staff needed for orders</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-check-circle benefit-icon"></i>
+                        <span>Real-time inventory updates</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-check-circle benefit-icon"></i>
+                        <span>Focus on food preparation</span>
                     </div>
                     <div class="benefit-item">
                         <i class="fas fa-check-circle benefit-icon"></i>
                         <span>Better resource management</span>
-                    </div>
-                    <div class="benefit-item">
-                        <i class="fas fa-check-circle benefit-icon"></i>
-                        <span>Improved customer satisfaction</span>
                     </div>
                 </div>
             </div>
@@ -906,7 +1392,7 @@
                 <div class="footer-section">
                     <h4>Get Started</h4>
                     <p>Ready to revolutionize your food court experience?</p>
-                    <a href="#" class="cta-button" style="margin-top: var(--space-4);">Try RestoGenie</a>
+                    <a class="button">Contact Us</a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -915,69 +1401,107 @@
         </div>
     </footer>
 
-    <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
-        // Header background change on scroll
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('.header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-                header.style.backdropFilter = 'blur(20px)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-                header.style.backdropFilter = 'blur(10px)';
+    <script>
+
+
+
+
+
+
+        // Mobile menu toggle (enhanced implementation)
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const body = document.body;
+        let isMenuOpen = false;
+
+        function toggleMobileMenu() {
+            isMenuOpen = !isMenuOpen;
+            navLinks.classList.toggle('active', isMenuOpen);
+            
+            // Update hamburger icon
+            const icon = mobileMenuToggle.querySelector('i');
+            icon.className = isMenuOpen ? 'fas fa-times' : 'fas fa-bars';
+            
+            // Prevent body scroll when menu is open
+            body.style.overflow = isMenuOpen ? 'hidden' : '';
+        }
+
+        mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+
+        // Close menu when clicking nav links
+        navLinks.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                toggleMobileMenu();
             }
         });
 
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isMenuOpen) {
+                toggleMobileMenu();
+            }
+        });
 
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                }
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768 && isMenuOpen) {
+                toggleMobileMenu();
+            }
+        });
+
+        // Back to top button functionality
+        const backToTopButton = document.getElementById('backToTop');
+        
+        function updateBackToTopButton() {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', updateBackToTopButton);
+        
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
-        }, observerOptions);
-
-        // Observe all animated elements
-        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
-            el.style.animationPlayState = 'paused';
-            observer.observe(el);
         });
 
-        // Mobile menu toggle (basic implementation)
-        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
-
-        mobileMenuToggle.addEventListener('click', function() {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-        });
-
-        // Add some interactive hover effects
-        document.querySelectorAll('.feature-card, .step-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-8px)';
+        // Touch-optimized card interactions
+        document.querySelectorAll('.feature-card, .step-card, .benefit-item').forEach(card => {
+            // Only add hover effects for devices that support hover
+            if (window.matchMedia('(hover: hover)').matches) {
+                card.addEventListener('mouseenter', function() {
+                    if (this.classList.contains('benefit-item')) {
+                        this.style.background = 'rgba(255, 107, 53, 0.1)';
+                    } else {
+                        this.style.transform = 'translateY(-8px)';
+                    }
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    if (this.classList.contains('benefit-item')) {
+                        this.style.background = '';
+                    } else {
+                        this.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            
+            // Add touch feedback for all devices
+            card.addEventListener('touchstart', function() {
+                this.style.opacity = '0.9';
             });
             
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
+            card.addEventListener('touchend', function() {
+                this.style.opacity = '';
             });
         });
 
@@ -1024,6 +1548,357 @@
             }
         `;
         document.head.appendChild(style);
+
+        // Enhanced smooth scrolling with offset for fixed header
+        function scrollToSection(targetId) {
+            const target = document.querySelector(targetId);
+            if (target) {
+                const headerHeight = document.querySelector('.header').offsetHeight;
+                const targetPosition = target.offsetTop - headerHeight - 20;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Update smooth scrolling for all anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                scrollToSection(targetId);
+            });
+        });
+
+        // Performance optimization: throttle scroll events
+        function throttle(func, limit) {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            };
+        }
+
+        // Throttled scroll handler
+        const throttledScrollHandler = throttle(function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.backdropFilter = 'blur(20px)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            }
+            updateBackToTopButton();
+        }, 16);
+
+        window.addEventListener('scroll', throttledScrollHandler);
+
+        // Enhanced intersection observer with better mobile performance
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -20px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                    // Unobserve after animation starts for better performance
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements with reduced load
+        setTimeout(() => {
+            document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+        }, 100);
+
+        // Prevent zoom on double tap for iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Mobile-specific enhancements
+        
+        // Swipe gesture support for feature cards
+        function initSwipeSupport() {
+            const swipeableContainers = document.querySelectorAll('.swipeable-container');
+            
+            swipeableContainers.forEach(container => {
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+                let momentum = 0;
+                
+                container.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    container.classList.add('active');
+                    startX = e.pageX - container.offsetLeft;
+                    scrollLeft = container.scrollLeft;
+                    momentum = 0;
+                });
+                
+                container.addEventListener('mouseleave', () => {
+                    isDown = false;
+                    container.classList.remove('active');
+                });
+                
+                container.addEventListener('mouseup', () => {
+                    isDown = false;
+                    container.classList.remove('active');
+                });
+                
+                container.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - container.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    container.scrollLeft = scrollLeft - walk;
+                    momentum = walk;
+                });
+                
+                // Touch events for mobile
+                let touchStartX = 0;
+                let touchStartTime = 0;
+                
+                container.addEventListener('touchstart', (e) => {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartTime = Date.now();
+                    container.style.scrollBehavior = 'auto';
+                });
+                
+                container.addEventListener('touchend', (e) => {
+                    const touchEndX = e.changedTouches[0].clientX;
+                    const touchEndTime = Date.now();
+                    const timeDiff = touchEndTime - touchStartTime;
+                    const distance = touchStartX - touchEndX;
+                    
+                    // If it's a quick swipe, add momentum
+                    if (timeDiff < 300 && Math.abs(distance) > 50) {
+                        const momentum = distance * 2;
+                        container.scrollBy({
+                            left: momentum,
+                            behavior: 'smooth'
+                        });
+                    }
+                    
+                    setTimeout(() => {
+                        container.style.scrollBehavior = 'smooth';
+                    }, 100);
+                });
+            });
+        }
+        
+        // Initialize swipe support when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initSwipeSupport);
+        
+        // Device orientation change handler
+        window.addEventListener('orientationchange', function() {
+            // Re-calculate layouts after orientation change
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 100);
+        });
+        
+        // Improved viewport height handling for mobile browsers
+        function setViewportHeight() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        
+        setViewportHeight();
+        window.addEventListener('resize', throttle(setViewportHeight, 250));
+        
+        // Network-aware loading for better mobile performance
+        function isSlowConnection() {
+            return navigator.connection && 
+                   (navigator.connection.effectiveType === 'slow-2g' || 
+                    navigator.connection.effectiveType === '2g' ||
+                    navigator.connection.saveData);
+        }
+        
+        // Optimize for slow connections
+        if (isSlowConnection()) {
+            // Reduce animation complexity
+            document.documentElement.style.setProperty('--duration-normal', '150ms');
+            document.documentElement.style.setProperty('--duration-fast', '100ms');
+        }
+        
+        // Progressive image loading for mobile
+        function lazyLoadImages() {
+            const images = document.querySelectorAll('img[data-src]');
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+            
+            images.forEach(img => imageObserver.observe(img));
+        }
+        
+        // Initialize lazy loading
+        lazyLoadImages();
+        
+        // Mobile-specific error handling
+        window.addEventListener('error', function(e) {
+            console.log('Mobile optimized error handling:', e.message);
+        });
+        
+        // Add vibration feedback for supported devices
+        function addHapticFeedback(element, type = 'light') {
+            element.addEventListener('click', function() {
+                if (navigator.vibrate) {
+                    switch(type) {
+                        case 'light':
+                            navigator.vibrate(10);
+                            break;
+                        case 'medium':
+                            navigator.vibrate(20);
+                            break;
+                        case 'heavy':
+                            navigator.vibrate([20, 10, 20]);
+                            break;
+                    }
+                }
+            });
+        }
+        
+        // Add haptic feedback to interactive elements
+        document.querySelectorAll('.cta-button').forEach(btn => addHapticFeedback(btn, 'medium'));
+        document.querySelectorAll('.feature-card, .step-card').forEach(card => addHapticFeedback(card, 'light'));
+        addHapticFeedback(mobileMenuToggle, 'light');
+        addHapticFeedback(backToTopButton, 'light');
+        
+        // Mobile performance monitoring
+        function logPerformanceMetrics() {
+            if ('performance' in window) {
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        const perfData = performance.getEntriesByType('navigation')[0];
+                        const loadTime = perfData.loadEventEnd - perfData.loadEventStart;
+                        console.log(`RestoGenie loaded in ${loadTime}ms`);
+                        
+                        // Show loading indicator if page takes too long
+                        if (loadTime > 3000) {
+                            console.log('Slow loading detected - consider optimization');
+                        }
+                    }, 0);
+                });
+            }
+        }
+        
+        logPerformanceMetrics();
+        
+        // Gesture-based navigation hints (using in-memory storage)
+        function showMobileHints() {
+            const isFirstVisit = !window.restogenieVisited;
+            
+            if (isFirstVisit && window.innerWidth < 768) {
+                // Show subtle animation hints for mobile users
+                setTimeout(() => {
+                    const swipeIndicators = document.querySelectorAll('.swipe-indicator');
+                    swipeIndicators.forEach(indicator => {
+                        indicator.style.animation = 'pulse 2s infinite';
+                    });
+                    
+                    // Stop animation after 6 seconds
+                    setTimeout(() => {
+                        swipeIndicators.forEach(indicator => {
+                            indicator.style.animation = '';
+                        });
+                        // Using in-memory flag instead of localStorage
+                        window.restogenieVisited = true;
+                    }, 6000);
+                }, 2000);
+            }
+        }
+        
+        // Add pulse animation for hints
+        const hintStyle = document.createElement('style');
+        hintStyle.textContent = `
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.6; }
+            }
+        `;
+        document.head.appendChild(hintStyle);
+        
+        showMobileHints();
+        
+        // Advanced mobile menu improvements
+        function enhanceMobileMenu() {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            navLinks.forEach((link, index) => {
+                link.style.transitionDelay = `${index * 50}ms`;
+                
+                link.addEventListener('click', function() {
+                    // Add ripple effect on mobile menu links
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        }
+        
+        enhanceMobileMenu();
+        
+        // Smart scroll behavior for mobile
+        let lastScrollTop = 0;
+        let isScrollingDown = false;
+        
+        const smartScrollHandler = throttle(function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const header = document.querySelector('.header');
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down
+                if (!isScrollingDown) {
+                    isScrollingDown = true;
+                    if (window.innerWidth < 768) {
+                        header.style.transform = 'translateY(-100%)';
+                    }
+                }
+            } else {
+                // Scrolling up
+                if (isScrollingDown) {
+                    isScrollingDown = false;
+                    header.style.transform = 'translateY(0)';
+                }
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }, 100);
+        
+        // Only enable smart scroll on mobile
+        if (window.innerWidth < 768) {
+            window.addEventListener('scroll', smartScrollHandler);
+        }
+        
+        console.log('RestoGenie Mobile Optimization Complete ✅');
     </script>
 </body>
 </html>
